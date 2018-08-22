@@ -49,7 +49,7 @@ import { SocialSharing } from "@ionic-native/social-sharing";
 
 		<ion-footer>
 			<ion-row align-items-center justify-content-center>
-				<button ion-button (tap)="openShareSheet(imageUrl)">
+				<button ion-button (tap)="openShareSheet(imageUrl)" clear color="white">
 					<ion-icon name="share"></ion-icon>
 				</button>
 			</ion-row>
@@ -61,6 +61,7 @@ import { SocialSharing } from "@ionic-native/social-sharing";
 export class ImageViewerComponent extends Ion implements OnInit, OnDestroy, AfterViewInit
 {
 	public imageUrl: SafeUrl;
+	private imageUrlString: string;
 
 	public dragGesture: ImageViewerTransitionGesture;
 
@@ -94,6 +95,7 @@ export class ImageViewerComponent extends Ion implements OnInit, OnDestroy, Afte
 
 	updateImageSrc(src) {
 		this.imageUrl = this._sanitizer.bypassSecurityTrustUrl(src);
+		this.imageUrlString = src;
 	}
 
 	updateImageSrcWithTransition(src) {
@@ -131,44 +133,47 @@ export class ImageViewerComponent extends Ion implements OnInit, OnDestroy, Afte
 		}
 	}
 
-	openShareSheet(imageUrl: string)
+	openShareSheet()
 	{
-		if (this.platform.is('cordova'))
+		console.log('image', this.imageUrlString);
+		if (this.imageUrlString)
 		{
-			const options = {
-				files: [imageUrl],
-				// customClass: this.activeTheme
-			};
+			if (this.platform.is('cordova'))
+			{
+				const options = {
+					files: [this.imageUrlString],
+					// customClass: this.activeTheme
+				};
 
-			this.socialShare.shareWithOptions(options).then((response) => {
-				// console.log('Shared via options', JSON.stringify(success));
-				if (response.completed === true)
-				{
+				this.socialShare.shareWithOptions(options).then((response) => {
+					// console.log('Shared via options', JSON.stringify(success));
+					if (response.completed === true) {
 
-					// let toast = this.toastCtrl.create({
-					// 	message: 'Exportiert',
-					// 	duration: 3000,
-					// 	position: 'middle',
-					// 	showCloseButton: false,
-					// 	cssClass: 'success-center'
-					// });
+						// let toast = this.toastCtrl.create({
+						// 	message: 'Exportiert',
+						// 	duration: 3000,
+						// 	position: 'middle',
+						// 	showCloseButton: false,
+						// 	cssClass: 'success-center'
+						// });
 
-					// toast.present();
-				}
+						// toast.present();
+					}
 
-			}).catch(() => {
-			});
-		}
-		else {
-			// Construct downloadable
-			const link = document.createElement("a");
-			link.download = name;
-			link.href = imageUrl;
-			document.body.appendChild(link);
-			link.click();
+				}).catch(() => {
+				});
+			}
+			else {
+				// Construct downloadable
+				const link = document.createElement("a");
+				link.download = name;
+				link.href = this.imageUrlString;
+				document.body.appendChild(link);
+				link.click();
 
-			// Cleanup the DOM
-			document.body.removeChild(link);
+				// Cleanup the DOM
+				document.body.removeChild(link);
+			}
 		}
 	}
 }

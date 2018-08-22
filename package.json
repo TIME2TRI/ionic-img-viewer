@@ -9,10 +9,6 @@
     "prepublish": "node ngc-build.js",
     "build": "node ngc-build.js && cp package-dist.json dist/package.json && cd dist && git init && git add . && git commit -m \"[TASK] Auto commit\" && git remote add origin https://github.com/TIME2TRI/ion-img-viewer-dist.git && git push -u origin master -f"
   },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/Riron/ionic-img-viewer"
-  },
   "keywords": [
     "ionic2",
     "image",
