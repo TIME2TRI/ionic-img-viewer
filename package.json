@@ -1,6 +1,6 @@
 {
-  "name": "ionic-img-viewer",
-  "version": "2.9.0",
+  "name": "@time2tri/ion-img-viewer",
+  "version": "2.9.1",
   "description": "Ionic 2 component providing a Twitter inspired experience to visualize pictures.",
   "main": "./dist/es2015/ionic-img-viewer.js",
   "typings": "./dist/es2015/ionic-img-viewer.d.ts",
@@ -31,12 +31,16 @@
     "@angular/platform-browser-dynamic": "5.0.0",
     "@angular/platform-server": "5.0.0",
     "fs-extra": "^4.0.2",
-    "node-sass": "^4.5.3",
+    "node-sass": "^4.9.3",
     "rxjs": "5.5.2",
     "typescript": "2.4.2",
     "zone.js": "0.8.18"
   },
   "peerDependencies": {
-    "ionic-angular": "~3.9.0"
+    "ionic-angular": "~3.9.2"
+  },
+  "dependencies": {
+    "@ionic-native/social-sharing": "^4.12.0",
+    "ionic-angular": "^3.9.2"
   }
 }

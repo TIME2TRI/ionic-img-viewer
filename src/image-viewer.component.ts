@@ -29,6 +29,7 @@ import { ImageViewerSrcAnimation } from './image-viewer-src-animation';
 import { ImageViewerTransitionGesture } from './image-viewer-transition-gesture';
 import { ImageViewerZoomGesture } from './image-viewer-zoom-gesture';
 import { ImageViewerEnter, ImageViewerLeave } from './image-viewer-transitions';
+import { SocialSharing } from "@ionic-native/social-sharing";
 
 @Component({
 	selector: 'image-viewer',
@@ -45,11 +46,20 @@ import { ImageViewerEnter, ImageViewerLeave } from './image-viewer-transitions';
 				<img [src]="imageUrl" tappable #image />
 			</div>
 		</div>
+
+		<ion-footer>
+			<ion-row align-items-center justify-content-center>
+				<button ion-button (tap)="openShareSheet(imageUrl)">
+					<ion-icon name="share />"
+				</button>
+			</ion-row>
+		</ion-footer>
 	`,
 	styles: [],
 	encapsulation: ViewEncapsulation.None
 })
-export class ImageViewerComponent extends Ion implements OnInit, OnDestroy, AfterViewInit {
+export class ImageViewerComponent extends Ion implements OnInit, OnDestroy, AfterViewInit
+{
 	public imageUrl: SafeUrl;
 
 	public dragGesture: ImageViewerTransitionGesture;
@@ -72,6 +82,7 @@ export class ImageViewerComponent extends Ion implements OnInit, OnDestroy, Afte
 		private domCtrl: DomController,
 		private platform: Platform,
 		private _navParams: NavParams,
+		private socialShare: SocialSharing,
 		_config: Config,
 		private _sanitizer: DomSanitizer
 	) {
@@ -117,6 +128,47 @@ export class ImageViewerComponent extends Ion implements OnInit, OnDestroy, Afte
 	bdClick() {
 		if (this._navParams.get('enableBackdropDismiss')) {
 			this._nav.pop();
+		}
+	}
+
+	openShareSheet(imageUrl: string)
+	{
+		if (this.platform.is('cordova'))
+		{
+			const options = {
+				files: [imageUrl],
+				// customClass: this.activeTheme
+			};
+
+			this.socialShare.shareWithOptions(options).then((response) => {
+				// console.log('Shared via options', JSON.stringify(success));
+				if (response.completed === true)
+				{
+
+					// let toast = this.toastCtrl.create({
+					// 	message: 'Exportiert',
+					// 	duration: 3000,
+					// 	position: 'middle',
+					// 	showCloseButton: false,
+					// 	cssClass: 'success-center'
+					// });
+
+					// toast.present();
+				}
+
+			}).catch(() => {
+			});
+		}
+		else {
+			// Construct downloadable
+			const link = document.createElement("a");
+			link.download = name;
+			link.href = imageUrl;
+			document.body.appendChild(link);
+			link.click();
+
+			// Cleanup the DOM
+			document.body.removeChild(link);
 		}
 	}
 }
