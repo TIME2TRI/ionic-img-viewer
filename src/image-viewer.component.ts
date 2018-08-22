@@ -56,6 +56,7 @@ import { SocialSharing } from "@ionic-native/social-sharing";
 		</ion-footer>
 	`,
 	styles: [],
+	providers: [SocialSharing],
 	encapsulation: ViewEncapsulation.None
 })
 export class ImageViewerComponent extends Ion implements OnInit, OnDestroy, AfterViewInit
@@ -83,7 +84,7 @@ export class ImageViewerComponent extends Ion implements OnInit, OnDestroy, Afte
 		private domCtrl: DomController,
 		private platform: Platform,
 		private _navParams: NavParams,
-		private socialShare: SocialSharing,
+		private _socialShare: SocialSharing,
 		_config: Config,
 		private _sanitizer: DomSanitizer
 	) {
@@ -145,7 +146,7 @@ export class ImageViewerComponent extends Ion implements OnInit, OnDestroy, Afte
 					// customClass: this.activeTheme
 				};
 
-				this.socialShare.shareWithOptions(options).then((response) => {
+				this._socialShare.shareWithOptions(options).then((response) => {
 					// console.log('Shared via options', JSON.stringify(success));
 					if (response.completed === true) {
 
