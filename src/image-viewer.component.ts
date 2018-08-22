@@ -50,7 +50,7 @@ import { SocialSharing } from "@ionic-native/social-sharing";
 		<ion-footer>
 			<ion-row align-items-center justify-content-center>
 				<button ion-button (tap)="openShareSheet(imageUrl)">
-					<ion-icon name="share />"
+					<ion-icon name="share"></ion-icon>
 				</button>
 			</ion-row>
 		</ion-footer>

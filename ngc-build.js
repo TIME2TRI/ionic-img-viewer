@@ -4,6 +4,7 @@ const path = require('path');
 const { exec } = require('child_process');
 
 const tempFolder = '.tmp';
+const distFolder = 'dist';
 const componentPath = `./${tempFolder}/src/image-viewer.component.ts`;
 const scssPath = `./${tempFolder}/src/image-viewer.scss`;
 
@@ -83,6 +84,7 @@ function writeFile(path, data) {
 
 function prepareTempFolder() {
   fs.removeSync(tempFolder);
+  fs.removeSync(distFolder);
 
   fs.copySync('src', `${tempFolder}/src`);
 

@@ -6,7 +6,8 @@
   "typings": "./dist/es2015/ionic-img-viewer.d.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "prepublish": "node ngc-build.js"
+    "prepublish": "node ngc-build.js",
+    "build": "node ngc-build.js && cp package-dist.json dist/package.json && cd dist && git init && git add . && git commit -m \"[TASK] Auto commit\" && git remote add origin https://github.com/TIME2TRI/ion-img-viewer-dist.git && git push -u origin master -f"
   },
   "repository": {
     "type": "git",
@@ -34,12 +35,15 @@
     "node-sass": "^4.9.3",
     "rxjs": "5.5.2",
     "typescript": "2.4.2",
-    "zone.js": "0.8.18"
+    "zone.js": "0.8.18",
+    "@ionic-native/core": "^4.12.0",
+    "@ionic-native/social-sharing": "^4.12.0"
   },
   "peerDependencies": {
     "ionic-angular": "~3.9.2"
   },
   "dependencies": {
+    "@ionic-native/core": "^4.12.0",
     "@ionic-native/social-sharing": "^4.12.0",
     "ionic-angular": "^3.9.2"
   }

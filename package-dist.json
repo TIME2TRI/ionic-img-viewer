@@ -1,0 +1,11 @@
+{
+  "name": "@time2tri/ion-img-viewer",
+  "version": "2.9.1",
+  "description": "Ionic 2 component providing a Twitter inspired experience to visualize pictures.",
+  "main": "./es2015/ionic-img-viewer.js",
+  "typings": "./es2015/ionic-img-viewer.d.ts",
+  "dependencies": {
+    "@ionic-native/social-sharing": "^4.12.0",
+    "ionic-angular": "^3.9.2"
+  }
+}
