@@ -9,7 +9,8 @@ import {
 	GestureController,
 	Config,
 	Platform,
-    Animation
+    Animation,
+    ToastController
 } from 'ionic-angular';
 import { DIRECTION_HORIZONTAL, DIRECTION_VERTICAL } from 'ionic-angular/gestures/hammer';
 import {
@@ -85,6 +86,7 @@ export class ImageViewerComponent extends Ion implements OnInit, OnDestroy, Afte
 		private platform: Platform,
 		private _navParams: NavParams,
 		private _socialShare: SocialSharing,
+		private _toastCtrl: ToastController,
 		_config: Config,
 		private _sanitizer: DomSanitizer
 	) {
@@ -150,15 +152,15 @@ export class ImageViewerComponent extends Ion implements OnInit, OnDestroy, Afte
 					// console.log('Shared via options', JSON.stringify(success));
 					if (response.completed === true) {
 
-						// let toast = this.toastCtrl.create({
-						// 	message: 'Exportiert',
-						// 	duration: 3000,
-						// 	position: 'middle',
-						// 	showCloseButton: false,
-						// 	cssClass: 'success-center'
-						// });
+						let toast = this._toastCtrl.create({
+							message: 'Exportiert',
+							duration: 3000,
+							position: 'middle',
+							showCloseButton: false,
+							cssClass: 'success-center'
+						});
 
-						// toast.present();
+						toast.present();
 					}
 
 				}).catch(() => {
