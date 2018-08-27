@@ -10,7 +10,8 @@ import {
 	Config,
 	Platform,
     Animation,
-    ToastController
+    ToastController,
+    Events
 } from 'ionic-angular';
 import { DIRECTION_HORIZONTAL, DIRECTION_VERTICAL } from 'ionic-angular/gestures/hammer';
 import {
@@ -23,6 +24,7 @@ import {
     Renderer,
     ViewChild,
     ViewEncapsulation,
+    Input,
 } from '@angular/core';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 
@@ -37,6 +39,11 @@ import { SocialSharing } from "@ionic-native/social-sharing";
 	template: `
 		<ion-header no-border>
 			<ion-navbar>
+			<ion-buttons class="flex flex-row" end *ngIf="deletable">
+				<button ion-button icon-only class="btn-more bar-button-menutoggle-ios m-r-0" (click)="sendEvent('imageViewer:deleteImage')">
+					<ion-icon class="btn-nav btn-nav-sm" name="ui-15"></ion-icon>
+				</button>
+			</ion-buttons>
 			</ion-navbar>
 		</ion-header>
 
@@ -48,7 +55,7 @@ import { SocialSharing } from "@ionic-native/social-sharing";
 			</div>
 		</div>
 
-		<ion-footer>
+		<ion-footer *ngIf="shareable">
 			<ion-row align-items-center justify-content-center>
 				<button ion-button (tap)="openShareSheet(imageUrl)" clear color="white">
 					<ion-icon name="share"></ion-icon>
@@ -70,6 +77,10 @@ export class ImageViewerComponent extends Ion implements OnInit, OnDestroy, Afte
 	@ViewChild('imageContainer') imageContainer;
 	@ViewChild('image') image;
 
+	@Input() deletable: boolean = true;
+	@Input() shareable: boolean = true;
+	@Input() sendShareEvent: boolean = false;
+
 	private pinchGesture: ImageViewerZoomGesture;
 
 	public isZoomed: boolean;
@@ -87,6 +98,7 @@ export class ImageViewerComponent extends Ion implements OnInit, OnDestroy, Afte
 		private _navParams: NavParams,
 		private _socialShare: SocialSharing,
 		private _toastCtrl: ToastController,
+		private _events: Events,
 		_config: Config,
 		private _sanitizer: DomSanitizer
 	) {
@@ -138,45 +150,56 @@ export class ImageViewerComponent extends Ion implements OnInit, OnDestroy, Afte
 
 	openShareSheet()
 	{
-		console.log('image', this.imageUrlString);
+		// console.log('image', this.imageUrlString);
 		if (this.imageUrlString)
 		{
-			if (this.platform.is('cordova'))
+			if (this.sendShareEvent === true)
 			{
-				const options = {
-					files: [this.imageUrlString],
-					// customClass: this.activeTheme
-				};
-
-				this._socialShare.shareWithOptions(options).then((response) => {
-					// console.log('Shared via options', JSON.stringify(success));
-					if (response.completed === true) {
-
-						let toast = this._toastCtrl.create({
-							message: 'Exportiert',
-							duration: 3000,
-							position: 'middle',
-							showCloseButton: false,
-							cssClass: 'success-center'
-						});
-
-						toast.present();
-					}
-
-				}).catch(() => {
-				});
+				this.sendEvent('imageViewer:shareImage');
 			}
 			else {
-				// Construct downloadable
-				const link = document.createElement("a");
-				link.download = name;
-				link.href = this.imageUrlString;
-				document.body.appendChild(link);
-				link.click();
+				if (this.platform.is('cordova')) {
+					const options = {
+						files: [this.imageUrlString],
+						// customClass: this.activeTheme
+					};
 
-				// Cleanup the DOM
-				document.body.removeChild(link);
+					this._socialShare.shareWithOptions(options).then((response) => {
+						// console.log('Shared via options', JSON.stringify(success));
+						if (response.completed === true) {
+
+							let toast = this._toastCtrl.create({
+								message: 'Geteilt',
+								duration: 3000,
+								position: 'middle',
+								showCloseButton: false,
+								cssClass: 'success-center'
+							});
+
+							toast.present();
+						}
+
+					}).catch(() => {
+					});
+				}
+				else {
+					// Construct downloadable
+					const link = document.createElement("a");
+					link.download = name;
+					link.href = this.imageUrlString;
+					document.body.appendChild(link);
+					link.click();
+
+					// Cleanup the DOM
+					document.body.removeChild(link);
+				}
 			}
+			
 		}
+	}
+
+	sendEvent(eventName:string)
+	{
+		this._events.publish(eventName, { imageUrl: this.imageUrlString, image: this.image, imageContainer: this.imageContainer });
 	}
 }
